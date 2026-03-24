@@ -7,6 +7,7 @@ import com.ticketbooking.model.Seat;
 import com.ticketbooking.model.Show;
 import com.ticketbooking.model.Venue;
 import com.ticketbooking.model.enums.SeatStatus;
+import com.ticketbooking.repository.BookingRepository;
 import com.ticketbooking.repository.SeatRepository;
 import com.ticketbooking.repository.ShowRepository;
 import org.springframework.stereotype.Service;
@@ -22,13 +23,16 @@ public class ShowService {
 
     private final ShowRepository showRepository;
     private final SeatRepository seatRepository;
+    private final BookingRepository bookingRepository;
     private final EventService eventService;
     private final VenueService venueService;
 
     public ShowService(ShowRepository showRepository, SeatRepository seatRepository,
+                       BookingRepository bookingRepository,
                        EventService eventService, VenueService venueService) {
         this.showRepository = showRepository;
         this.seatRepository = seatRepository;
+        this.bookingRepository = bookingRepository;
         this.eventService = eventService;
         this.venueService = venueService;
     }
@@ -74,6 +78,10 @@ public class ShowService {
     }
 
     public void deleteShow(Long id) {
+        if (bookingRepository.existsByShowId(id)) {
+            throw new IllegalStateException("Cannot delete show: it has existing bookings.");
+        }
+        seatRepository.deleteByShowId(id);
         showRepository.deleteById(id);
     }
 

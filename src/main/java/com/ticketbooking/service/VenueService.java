@@ -2,6 +2,7 @@ package com.ticketbooking.service;
 
 import com.ticketbooking.exception.VenueNotFoundException;
 import com.ticketbooking.model.Venue;
+import com.ticketbooking.repository.ShowRepository;
 import com.ticketbooking.repository.VenueRepository;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -13,9 +14,11 @@ import java.util.List;
 public class VenueService {
 
     private final VenueRepository venueRepository;
+    private final ShowRepository showRepository;
 
-    public VenueService(VenueRepository venueRepository) {
+    public VenueService(VenueRepository venueRepository, ShowRepository showRepository) {
         this.venueRepository = venueRepository;
+        this.showRepository = showRepository;
     }
 
     @Transactional(readOnly = true)
@@ -46,6 +49,9 @@ public class VenueService {
     }
 
     public void deleteVenue(Long id) {
+        if (!showRepository.findByVenueId(id).isEmpty()) {
+            throw new IllegalStateException("Cannot delete venue: it has scheduled shows.");
+        }
         venueRepository.deleteById(id);
     }
 

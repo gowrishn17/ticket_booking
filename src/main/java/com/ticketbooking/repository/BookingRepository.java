@@ -10,6 +10,8 @@ import java.util.List;
 @Repository
 public interface BookingRepository extends JpaRepository<Booking, Long> {
 
+    boolean existsByShowId(Long showId);
+
     @Query("SELECT b.show.event.title, SUM(b.totalAmount) FROM Booking b GROUP BY b.show.event.title")
     List<Object[]> getRevenueByEvent();
 

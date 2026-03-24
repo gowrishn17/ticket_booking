@@ -11,4 +11,5 @@ import java.util.List;
 public interface SeatRepository extends JpaRepository<Seat, Long> {
     List<Seat> findByShowId(Long showId);
     List<Seat> findByShowIdAndStatus(Long showId, SeatStatus status);
+    void deleteByShowId(Long showId);
 }

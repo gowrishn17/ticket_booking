@@ -6,6 +6,7 @@ import com.ticketbooking.factory.EventFactory;
 import com.ticketbooking.model.Event;
 import com.ticketbooking.model.enums.EventStatus;
 import com.ticketbooking.repository.EventRepository;
+import com.ticketbooking.repository.ShowRepository;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -16,9 +17,11 @@ import java.util.List;
 public class EventService {
 
     private final EventRepository eventRepository;
+    private final ShowRepository showRepository;
 
-    public EventService(EventRepository eventRepository) {
+    public EventService(EventRepository eventRepository, ShowRepository showRepository) {
         this.eventRepository = eventRepository;
+        this.showRepository = showRepository;
     }
 
     @Transactional(readOnly = true)
@@ -58,6 +61,9 @@ public class EventService {
     }
 
     public void deleteEvent(Long id) {
+        if (!showRepository.findByEventId(id).isEmpty()) {
+            throw new IllegalStateException("Cannot delete event: it has scheduled shows.");
+        }
         eventRepository.deleteById(id);
     }
 
