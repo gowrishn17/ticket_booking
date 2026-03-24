@@ -1,6 +1,7 @@
 package com.ticketbooking.service;
 
 import com.ticketbooking.dto.EventDTO;
+import com.ticketbooking.exception.EventNotFoundException;
 import com.ticketbooking.factory.EventFactory;
 import com.ticketbooking.model.Event;
 import com.ticketbooking.model.enums.EventStatus;
@@ -28,7 +29,7 @@ public class EventService {
     @Transactional(readOnly = true)
     public Event getEventById(Long id) {
         return eventRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Event not found with id: " + id));
+                .orElseThrow(() -> new EventNotFoundException(id));
     }
 
     public Event createEvent(EventDTO dto) {

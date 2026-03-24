@@ -11,5 +11,5 @@ import java.util.List;
 public interface ShowRepository extends JpaRepository<Show, Long> {
     List<Show> findByEventId(Long eventId);
     List<Show> findByVenueId(Long venueId);
-    List<Show> findByShowTimeAfter(LocalDateTime dateTime);
+    List<Show> findByEventIdAndShowTimeAfter(Long eventId, LocalDateTime dateTime);
 }

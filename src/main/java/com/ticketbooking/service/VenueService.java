@@ -1,5 +1,6 @@
 package com.ticketbooking.service;
 
+import com.ticketbooking.exception.VenueNotFoundException;
 import com.ticketbooking.model.Venue;
 import com.ticketbooking.repository.VenueRepository;
 import org.springframework.stereotype.Service;
@@ -25,7 +26,7 @@ public class VenueService {
     @Transactional(readOnly = true)
     public Venue getVenueById(Long id) {
         return venueRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Venue not found with id: " + id));
+                .orElseThrow(() -> new VenueNotFoundException(id));
     }
 
     public Venue createVenue(Venue venue) {

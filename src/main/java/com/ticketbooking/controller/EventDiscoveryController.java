@@ -30,10 +30,7 @@ public class EventDiscoveryController {
     public String eventDetail(@PathVariable Long id, Model model) {
         model.addAttribute("event", eventService.getEventById(id));
         model.addAttribute("upcomingShows",
-                showService.getAllShows().stream()
-                        .filter(s -> s.getEvent().getId().equals(id)
-                                && s.getShowTime().isAfter(LocalDateTime.now()))
-                        .toList());
+                showService.getUpcomingShowsForEvent(id, LocalDateTime.now()));
         return "events/detail";
     }
 

@@ -39,7 +39,7 @@ public class Venue {
     private LocalDateTime createdAt;
 
     @PrePersist
-    public void calcCapacity() {
+    public void prePersist() {
         this.totalCapacity = this.totalRows * this.seatsPerRow;
         if (this.createdAt == null) this.createdAt = LocalDateTime.now();
     }

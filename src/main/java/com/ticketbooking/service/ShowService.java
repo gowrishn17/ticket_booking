@@ -1,6 +1,7 @@
 package com.ticketbooking.service;
 
 import com.ticketbooking.dto.ShowDTO;
+import com.ticketbooking.exception.ShowNotFoundException;
 import com.ticketbooking.model.Event;
 import com.ticketbooking.model.Seat;
 import com.ticketbooking.model.Show;
@@ -11,6 +12,7 @@ import com.ticketbooking.repository.ShowRepository;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -39,7 +41,7 @@ public class ShowService {
     @Transactional(readOnly = true)
     public Show getShowById(Long id) {
         return showRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Show not found with id: " + id));
+                .orElseThrow(() -> new ShowNotFoundException(id));
     }
 
     public Show createShow(ShowDTO dto) {
@@ -95,6 +97,11 @@ public class ShowService {
             }
         }
         seatRepository.saveAll(seats);
+    }
+
+    @Transactional(readOnly = true)
+    public List<Show> getUpcomingShowsForEvent(Long eventId, LocalDateTime after) {
+        return showRepository.findByEventIdAndShowTimeAfter(eventId, after);
     }
 
     @Transactional(readOnly = true)
